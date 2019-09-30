@@ -43,7 +43,7 @@ AM_CONDITIONAL(DEBUG, test x$debug = xtrue)
 AC_PROG_CC
 AC_PROG_INSTALL
 #AC_PROG_LIBTOOL
-AC_CHECK_LIB
+#AC_CHECK_LIB
 
 AC_DEFINE([_FILE_OFFSET_BITS], [64], [File Offset size])
 
@@ -58,6 +58,9 @@ AC_SUBST(pkgconfigdir)
 PKG_PROG_PKG_CONFIG
 PKG_CHECK_MODULES(FUSE, [fuse >= 2.8])
 AC_CHECK_HEADERS([fuse.h])
+
+## OpenSSL
+PKG_CHECK_MODULES(SSL, [openssl >= 1.0])
 
 # Checks for libraries.
 

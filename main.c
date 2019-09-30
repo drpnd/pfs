@@ -34,6 +34,12 @@
 #include <sys/mman.h>
 #include <stdint.h>
 
+/* OpenSSL */
+#include <openssl/crypto.h>
+#include <openssl/ssl.h>
+#include <openssl/err.h>
+#include <openssl/rand.h>
+
 struct pfs {
     char *data;
     size_t size;
@@ -283,12 +289,43 @@ static struct fuse_operations pfs_oper = {
 };
 
 int
+server_ssl_start(void)
+{
+    uint16_t seed;
+
+    /* Initialize SSL */
+    /*srand((unsigned)time(NULL));*/
+    SSL_load_error_strings();
+    SSL_library_init();
+    RAND_poll();
+    while ( 0 == RAND_status () ) {
+        /* cf: http://www.openssl.org/docs/crypto/RAND_add.html */
+        seed = rand() % 65536;
+        RAND_seed(&seed, sizeof(seed));
+    }
+
+    return 0;
+}
+int
+server_ssl_end(void)
+{
+    /* Free error strings */
+    ERR_free_strings();
+
+    return 0;
+}
+
+int
 main(int argc, char *argv[])
 {
     struct pfs *pfs;
     long pagesize;
     size_t size;
     void *ptr;
+
+    /* Enable SSL */
+    (void)server_ssl_start();
+    (void)server_ssl_end();
 
     /* Allocate memory */
     pagesize = sysconf(_SC_PAGESIZE);

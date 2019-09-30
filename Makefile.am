@@ -32,8 +32,8 @@ pkgconfig_DATA = fuse-pfs.pc
 $(pkgconfig_DATA): config.status
 
 bin_PROGRAMS = pfs
-pfs_CPPFLAGS = $(FUSE_CFLAGS)
-pfs_LDFLAGS= $(FUSE_LIBS)
+pfs_CPPFLAGS = $(FUSE_CFLAGS) $(SSL_CFLAGS)
+pfs_LDFLAGS= $(FUSE_LIBS) $(SSL_LIBS)
 #libexec_PROGRAMS = 
 #lib_LIBRARIES = lib.a
 #noinst_LIBRARIES = 
